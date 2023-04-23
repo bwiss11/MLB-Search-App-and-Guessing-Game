@@ -1,0 +1,52 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="StyleA.css" />
+</head>
+
+<ul>
+    <li style="border-left:1px solid #bbb"><a href="./" style="font-weight:bold; color:white">Home</a></li>
+    <li><a href="./playerSearch" style="font-weight:bold; color:white">Player Search</a></li>
+    <li><a href="./random" style="font-weight:bold; color:white">Random</a></li>
+    <li style="float:right; border-left:1px solid #bbb;"><a href="./exampleResults" style="font-weight:bold; color:white">Results</a></li>
+    <li style="float:right; border-left:1px solid #bbb;"><a href="./errorPageExample" style="font-weight:bold; color:white">Error</a></li>
+    <li style="float:right; border-left:1px solid #bbb;"><a href="./about" style="font-weight:bold; color:white">About</a></li>
+</ul>  
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p>Type a player's first and last name, and select the year you want statistics from below.</p>
+<br>
+<br>
+<form id="player-search-form-ajax">
+    <fieldset>
+        <label for="input-firstname">First Name: </label>
+        <input type="text" name="input-firstname" id="input-firstname">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <label for="input-lastname">Last Name: </label>
+        <input type="text" name="input-lastname" id="input-lastname">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <label for="input-lastname">Year: </label>
+
+        <!--Populates the year dropdown from 1900 to current year-->
+        <select id='year-dropdown'>
+            <script>
+                let dateDropdown = document.getElementById('year-dropdown'); 
+                    
+                let currentYear = new Date().getFullYear();    
+                let earliestYear = 1900;     
+                while (currentYear >= earliestYear) {      
+                let dateOption = document.createElement('option');          
+                dateOption.text = currentYear;      
+                dateOption.value = currentYear;        
+                dateDropdown.add(dateOption);      
+                currentYear -= 1;    
+                }
+            </script>
+        </select>
+        <input class="button" type="submit" id="search" value="Search">
+    </fieldset>
+    <p></p>
+
+</form>
