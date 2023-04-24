@@ -3,6 +3,7 @@
 /*
     SETUP
 */
+
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
 const path = require('path');
@@ -12,8 +13,10 @@ console.log(__dirname)
 /*
     ROUTES
 */
+
+
 app.get('/', function(req, res)                 // This is the basic syntax for what is called a 'route'
-    {
+    {   
         res.sendFile(path.join(__dirname + '/pages/exampleResults.html'))
     });   
 
@@ -51,6 +54,13 @@ app.get('/backExample', function(req, res)                 // This is the basic 
     {
         res.sendFile(path.join(__dirname + '/pages/backExample.html'))
     }); 
+
+app.get('/js/test.mjs', function(req, res)                 // This is the basic syntax for what is called a 'route'
+    {
+        res.sendFile(path.join(__dirname + '/js/test.mjs'))
+    }); 
+
+
 
 /*
     LISTENER
