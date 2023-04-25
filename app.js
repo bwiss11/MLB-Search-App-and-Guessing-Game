@@ -4,10 +4,18 @@
     SETUP
 */
 
+const bodyParser = require("body-parser")
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
 const path = require('path');
 const router = express.Router();
+
+
+
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
+
 PORT        = 9124;                 // Set a port number at the top so it's easy to change in the future
 console.log(__dirname)
 /*
@@ -50,6 +58,18 @@ app.get('/exampleResults', function(req, res)                 // This is the bas
         res.sendFile(path.join(__dirname + '/pages/exampleResults.html'))
     }); 
 
+app.post('/exampleResults', function(req, res)                 // This is the basic syntax for what is called a 'route'
+    {
+        console.log('post example results called')
+        res.sendFile(path.join(__dirname + '/pages/exampleResults.html'))
+    }); 
+
+app.get('/testResult', function(req, res)                 // This is the basic syntax for what is called a 'route'
+    {
+        console.log('logging')
+        res.send('ok!')
+    }); 
+
 app.get('/backExample', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
         res.sendFile(path.join(__dirname + '/pages/backExample.html'))
@@ -59,6 +79,18 @@ app.get('/js/test.mjs', function(req, res)                 // This is the basic 
     {
         res.sendFile(path.join(__dirname + '/js/test.mjs'))
     }); 
+
+app.get('/js/searchPlayer.js', function(req, res)                 // This is the basic syntax for what is called a 'route'
+    {
+        res.sendFile(path.join(__dirname + '/js/searchPlayer.js'))
+    }); 
+
+// app.post('/backExample', function(req, res)                 // This is the basic syntax for what is called a 'route'
+//     {
+//         var first = req.body
+//         res.send('firstname is' + first.inputfirstname)
+//         logger(first.inputfirstname)
+//     }); 
 
 
 
