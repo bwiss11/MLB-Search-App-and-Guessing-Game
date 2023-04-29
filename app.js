@@ -25,7 +25,7 @@ console.log(__dirname)
 
 app.get('/', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {   
-        res.sendFile(path.join(__dirname + '/pages/exampleResults.html'))
+        res.sendFile(path.join(__dirname + '/pages/playerSearch.html'))
     });   
 
 app.get('/playerSearch', function(req, res)                 // This is the basic syntax for what is called a 'route'

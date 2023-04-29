@@ -128,6 +128,7 @@ const statssection = document.querySelector(".ajax-section .stats");
 const table = document.createElement("table");
 table.classList.add("stats");
 const markupstats = `
+<br>
       <th>Name</th>
       <th>Hits</th>
       <th>Home Runs</th>
@@ -146,9 +147,12 @@ const markupstats = `
       <td>${slg}</td>
       <td>${ops}</td>
     </tr>
+<br>
 `;
 table.innerHTML = markupstats;
 statssection.appendChild(table);
+
+form.reset()
 
 
 });
