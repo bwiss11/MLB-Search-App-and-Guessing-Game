@@ -51,23 +51,122 @@ async function get2023PlayerStats() {
 let playerStats = await get2023PlayerStats()
   // render new HTML page with API results
 //   const renderedHtml = ejs.render(template, { data });
-  console.log(playerStats);
+
+let name = playerStats.fullName
+let hits =  playerStats.stats[0].splits.slice(-1)[0].stat.hits
+let avg = playerStats.stats[0].splits.slice(-1)[0].stat.avg
+let obp = playerStats.stats[0].splits.slice(-1)[0].stat.obp
+let slg = playerStats.stats[0].splits.slice(-1)[0].stat.slg
+let rbis = playerStats.stats[0].splits.slice(-1)[0].stat.rbi
+let hrs = playerStats.stats[0].splits.slice(-1)[0].stat.homeRuns
+let ops = playerStats.stats[0].splits.slice(-1)[0].stat.ops
+let position = playerStats.primaryPosition.abbreviation
+let team = playerStats.stats[0].splits.slice(-1)[0].team.name
+let number = playerStats.primaryNumber
+
+let teamsDict = {
+  'Arizona Diamondbacks': '29', 'Atlanta Braves': '15', 'Baltimore Orioles': '1', 'Boston Red Sox': '2', 'Chicago Cubs': '16',
+  'Chicago White Sox': '4', 'Cincinnati Reds': '17', 'Cleveland Guardians': '5', 'Colorado Rockies': '27', 'Detroit Tigers': '6', 'Houston Astros': '18',
+  'Kansas City Royals': '7', 'Los Angeles Angels': '3', 'Los Angeles Dodgers': '19', 'Miami Marlins': '28', 'Milwaukee Brewers': '8', 'Minnesota Twins': '9', 
+  'New York Mets': '21', 'New York Yankees': '10', 'Oakland Athletics': '11', 'Philadelphia Phillies': '22', 'Pittsburgh Pirates': '23', 'San Diego Padres': '25', 'San Francisco Giants': '26',
+  'Seattle Mariners': '12', 'St. Louis Cardinals': '24', 'Tampa Bay Rays': '30', 'Texas Rangers': '13', 'Toronto Blue Jays': '14', 'Washington Nationals': '20'
+}
+
+// Gets player's team's ESPN API number from teamsDict
+let teamNumber = teamsDict[team]
+
+// Retrieves the roster of the player's team from ESPN's API
+async function getTeam() {
+  let response = await fetch("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + teamNumber + "?enable=roster");
+  let data = await response.json()
+  return data
+};
+
+// Assigns the player's team's roster to a variable
+let teamRoster = await getTeam()
+
+// Establishes variable to hold link to player's headshot
+var playerPic = ''
+
+// Goes through list of team's players and finds the headshot for the player whose name matches the input
+async function getHeadshot() {
+    for (let i = 0; i < teamRoster.team.athletes.length; i++) {
+        if (teamRoster.team.athletes[i].fullName == inputPlayer) {
+            playerPic = teamRoster.team.athletes[i].headshot.href
+            break
+        }
+    }
+    return playerPic
+};
+
+// Calls function that returns link to player's headshot, assigns the headshot to be dynamically displayed on the Results page
+let headshot = await getHeadshot()
+
+
+
+// Adds the player's headshot to the page
+const headshotsection = document.querySelector(".ajax-section .headshot");
+const pic = document.createElement("div");
+pic.classList.add("headshot");
+const markuppic = `
+
+<div class="container">
+  <div>
+    <img src=${headshot}>
+  </div>
+  <div id="playerinfo">
+    #${number} ${name} <br><br>  ${position} - ${team} 
+  </div>
+</div>
+`;
+pic.innerHTML = markuppic
+headshotsection.appendChild(pic)
+
+
+// Adds the player's statistics to a table to be displayed
+const statssection = document.querySelector(".ajax-section .stats");
+const table = document.createElement("table");
+table.classList.add("stats");
+const markupstats = `
+      <th>Name</th>
+      <th>Hits</th>
+      <th>Home Runs</th>
+      <th>RBIs</th>
+      <th>Batting Average</th>
+      <th>On Base Percentage</th>
+      <th>Slugging Percentage</th>
+      <th>On Base + Slugging</th>
+    <tr> 
+      <td>${name}</td>
+      <td>${hits}</td>
+      <td>${hrs}</td>
+      <td>${rbis}</td>
+      <td>${avg}</td>
+      <td>${obp}</td>
+      <td>${slg}</td>
+      <td>${ops}</td>
+    </tr>
+`;
+table.innerHTML = markupstats;
+statssection.appendChild(table);
+
+
 });
 
 
 
 
-let playerSearchForm = document.getElementById('player-search-form-ajax');
-console.log(playerSearchForm)
-console.log('hi')
+// let playerSearchForm = document.getElementById('player-search-form-ajax');
+// console.log(playerSearchForm)
+// console.log('hi')
 
-// playerSearchForm.addEventListener("submit", function(e) {
-//     e.preventDefault();
-//     let playerFirstName = document.getElementById("input-firstname");
-//     let playerLastName = document.getElementById("input-lastname");
-//     let playerFullName = playerFirstName + ' ' + playerLastName;
-//     console.log(playerFullName, 'is player fullname');
-// });
+// // playerSearchForm.addEventListener("submit", function(e) {
+// //     e.preventDefault();
+// //     let playerFirstName = document.getElementById("input-firstname");
+// //     let playerLastName = document.getElementById("input-lastname");
+// //     let playerFullName = playerFirstName + ' ' + playerLastName;
+// //     console.log(playerFullName, 'is player fullname');
+// // });
 
 // Gets a list of all of the players that have played in 2023
 // async function get2023Players() {

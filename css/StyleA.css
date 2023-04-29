@@ -111,3 +111,18 @@ img {
   max-height:100%;
 }
 
+
+
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#playerinfo {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
