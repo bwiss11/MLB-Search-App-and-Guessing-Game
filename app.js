@@ -12,9 +12,12 @@ const router = express.Router();
 
 
 
+
 app.use(bodyParser.urlencoded({
     extended:true
 }));
+
+app.use(express.json());
 
 PORT        = 9124;                 // Set a port number at the top so it's easy to change in the future
 console.log(__dirname)
@@ -85,6 +88,33 @@ app.get('/js/searchPlayer.js', function(req, res)                 // This is the
         res.sendFile(path.join(__dirname + '/js/searchPlayer.js'))
     }); 
 
+
+// app.get('/randomnumber', function(req, res)                 // This is the basic syntax for what is called a 'route'
+//     {   
+//         console.log('randomnumber called')
+//         res.json({ number: '592' })
+//     }); 
+
+// app.post('/randomnumber', function(req, res)                 // This is the basic syntax for what is called a 'route'
+//     {   
+//         console.log('randomnumber post request')
+//         const range = req.body.range;
+//         console.log(typeof range)
+//         var doublerange = range *2
+//         console.log(doublerange)
+//         res.json({ randomnumber: '522'})
+
+//     }); 
+
+
+    // app.post('/randomnumber', function(req, res)                 // This is the basic syntax for what is called a 'route'
+    // {   
+    //     const range = req.body.range;
+    //     // Your code here to calculate random number
+    //     // json response sent back with random number, e.g. 522
+    //     res.json({ randomnumber: '522'})
+
+    // }); 
 // app.post('/backExample', function(req, res)                 // This is the basic syntax for what is called a 'route'
 //     {
 //         var first = req.body

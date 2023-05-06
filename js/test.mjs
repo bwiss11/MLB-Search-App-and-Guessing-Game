@@ -158,8 +158,61 @@ form.reset()
 });
 
 
+// async function getNumber() {
+//   console.log('calling getnumber')
+//   let response = await fetch("./randomnumber")
+//   let data = await response.json()
+//   console.log(data)
+//   return data
+// };
+
+// let rNumber = getNumber()
+
+// async function getNumberPost() {
+//   console.log('calling getnumber post')
+//   let response = await fetch("/randomnumber", 
+//   {
+//     method: 'POST',
+//     headers: {
+//         // "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+//         "Content-type": "application/json"
+//     },
+//     body: JSON.stringify({ range: 50 })
+// })
+//   let data = await response.json()
+//   console.log(data)
+//   console.log(data.randomnumber)
+//   return data
+// };
+
+// let rNumberPost = getNumberPost()
 
 
+async function getNumberMicro() {
+  console.log('calling getnumber from microservice')
+  let response = await fetch("http://localhost:8000/randomnumber", 
+  {
+    method: 'POST',
+    url: 'http:/localhost:8000/randomnumber',
+    mode: 'cors',
+    headers: {
+        // "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+        "Content-type": "application/json"
+    },
+    body: JSON.stringify({ range: 1000 })
+})
+  let data = await response.json()
+  console.log(data)
+  console.log(data.randomnumber)
+  return data
+};
+
+
+
+numb = getNumberMicro().then(r => {
+  console.log(r.randomnumber, 'is the random number received')});
+
+// console.log(rNumberMicro, ' is random number from microservice')
 // let playerSearchForm = document.getElementById('player-search-form-ajax');
 // console.log(playerSearchForm)
 // console.log('hi')
