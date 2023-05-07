@@ -103,6 +103,11 @@ form.addEventListener('submit', async (event) => {
 
           // Adds the player's headshot to the page
           const headshotsection = document.querySelector(".ajax-section .headshot");
+          
+          // Clears section if there is already an old picture being displayed
+          headshotsection.innerHTML = ''
+
+          // Adds the player's headshot
           const pic = document.createElement("div");
           pic.classList.add("headshot");
           const markuppic = `
@@ -121,6 +126,11 @@ form.addEventListener('submit', async (event) => {
 
           // Adds the player's statistics to a table to be displayed
           const statssection = document.querySelector(".ajax-section .stats");
+
+          // Clears section if there is already old stats being displayed
+          statssection.innerHTML = ''
+
+          // Fills out table with player's stats
           const table = document.createElement("table");
           table.classList.add("stats");
           const markupstats = `
