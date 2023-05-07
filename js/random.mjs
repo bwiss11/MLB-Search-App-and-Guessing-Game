@@ -70,19 +70,6 @@ form.addEventListener('submit', async (event) => {
           // Assigns player's 2023 stats to a variable
           let playerStats = await get2023PlayerStats(playerId)
 
-          // Breaks players information into individual variables
-          let name = playerStats.fullName
-          let hits =  playerStats.stats[0].splits.slice(-1)[0].stat.hits
-          let avg = playerStats.stats[0].splits.slice(-1)[0].stat.avg
-          let obp = playerStats.stats[0].splits.slice(-1)[0].stat.obp
-          let slg = playerStats.stats[0].splits.slice(-1)[0].stat.slg
-          let rbis = playerStats.stats[0].splits.slice(-1)[0].stat.rbi
-          let hrs = playerStats.stats[0].splits.slice(-1)[0].stat.homeRuns
-          let ops = playerStats.stats[0].splits.slice(-1)[0].stat.ops
-          let position = playerStats.primaryPosition.abbreviation
-          let team = playerStats.stats[0].splits.slice(-1)[0].team.name
-          let number = playerStats.primaryNumber
-
           // Establishes a dictionary of teams and their corresponding team numbers in ESPN's API
           let teamsDict = {
             'Arizona Diamondbacks': '29', 'Atlanta Braves': '15', 'Baltimore Orioles': '1', 'Boston Red Sox': '2', 'Chicago Cubs': '16',
@@ -91,6 +78,8 @@ form.addEventListener('submit', async (event) => {
             'New York Mets': '21', 'New York Yankees': '10', 'Oakland Athletics': '11', 'Philadelphia Phillies': '22', 'Pittsburgh Pirates': '23', 'San Diego Padres': '25', 'San Francisco Giants': '26',
             'Seattle Mariners': '12', 'St. Louis Cardinals': '24', 'Tampa Bay Rays': '30', 'Texas Rangers': '13', 'Toronto Blue Jays': '14', 'Washington Nationals': '20'
           }
+          // Gets player's team name
+          let team = playerStats.stats[0].splits.slice(-1)[0].team.name
 
           // Gets player's team's ESPN API number from teamsDict
           let teamNumber = teamsDict[team]
@@ -100,6 +89,13 @@ form.addEventListener('submit', async (event) => {
 
           // Calls function that returns link to player's headshot, assigns the headshot to be dynamically displayed on the Results page
           let headshot = await getHeadshot(teamRoster, randPlayer)
+
+          // Gets player's position - used to return different data for pitchers vs. batters
+          let position = playerStats.primaryPosition.abbreviation
+
+          // Gets player's number and name to be displayed next to their headshot
+          let name = playerStats.fullName
+          let number = playerStats.primaryNumber
 
           // Adds the player's headshot to the page
           const headshotsection = document.querySelector(".ajax-section .headshot");
@@ -129,7 +125,59 @@ form.addEventListener('submit', async (event) => {
 
           // Clears section if there is already old stats being displayed
           statssection.innerHTML = ''
+          
+          if (position == 'P') {
+            console.log(playerStats.stats[0].splits.slice(-1)[0].stat)
+            // Player stats for pitchers
+            // Breaks players information into individual variables
+            let inningsPitched = playerStats.stats[0].splits.slice(-1)[0].stat.inningsPitched
+            let wins =  playerStats.stats[0].splits.slice(-1)[0].stat.wins
+            let losses = playerStats.stats[0].splits.slice(-1)[0].stat.losses
+            let saves = playerStats.stats[0].splits.slice(-1)[0].stat.saves
+            let era = playerStats.stats[0].splits.slice(-1)[0].stat.era
+            let whip = playerStats.stats[0].splits.slice(-1)[0].stat.whip
+            let strikeouts = playerStats.stats[0].splits.slice(-1)[0].stat.strikeOuts
+            let strikeoutsPer9 = playerStats.stats[0].splits.slice(-1)[0].stat.strikeoutsPer9Inn
+            let oppOps = playerStats.stats[0].splits.slice(-1)[0].stat.ops
 
+          const table = document.createElement("table");
+          table.classList.add("stats");
+          const markupstats = `
+          <br>
+                <th>Name</th>
+                <th>Innings Pitched</th>
+                <th>Win - Loss</th>
+                <th>Saves</th>
+                <th>Earned Run Average</th>
+                <th>WHIP</th>
+                <th>Strikeouts</th>
+                <th>Strikeouts Per 9</th>
+                <th>Opponent OPS</th>
+              <tr> 
+                <td>${name}</td>
+                <td>${inningsPitched}</td>
+                <td>${wins} - ${losses}</td>
+                <td>${saves}</td>
+                <td>${era}</td>
+                <td>${whip}</td>
+                <td>${strikeouts}</td>
+                <td>${strikeoutsPer9}</td>
+                <td>${oppOps}</td>
+              </tr>
+          <br>
+          `;
+          table.innerHTML = markupstats;
+          statssection.appendChild(table);
+          } else {
+            // Player stats for non-pitchers
+            // Breaks players information into individual variables
+            let hits =  playerStats.stats[0].splits.slice(-1)[0].stat.hits
+            let avg = playerStats.stats[0].splits.slice(-1)[0].stat.avg
+            let obp = playerStats.stats[0].splits.slice(-1)[0].stat.obp
+            let slg = playerStats.stats[0].splits.slice(-1)[0].stat.slg
+            let rbis = playerStats.stats[0].splits.slice(-1)[0].stat.rbi
+            let hrs = playerStats.stats[0].splits.slice(-1)[0].stat.homeRuns
+            let ops = playerStats.stats[0].splits.slice(-1)[0].stat.ops
           // Fills out table with player's stats
           const table = document.createElement("table");
           table.classList.add("stats");
@@ -157,6 +205,8 @@ form.addEventListener('submit', async (event) => {
           `;
           table.innerHTML = markupstats;
           statssection.appendChild(table);
-         }
+          }
+
+        }
       main()
 });
