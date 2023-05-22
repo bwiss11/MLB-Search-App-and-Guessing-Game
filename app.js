@@ -41,6 +41,11 @@ app.get('/random', function(req, res)                 // This is the basic synta
         res.sendFile(path.join(__dirname + '/pages/random.html'))
     }); 
 
+app.get('/guessingGame', function(req, res)                 // This is the basic syntax for what is called a 'route'
+    {
+        res.sendFile(path.join(__dirname + '/pages/guessingGame.html'))
+    }); 
+
 app.get('/StyleA.css', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
         res.sendFile(path.join(__dirname + '/css/StyleA.css'))
@@ -91,6 +96,11 @@ app.get('/js/searchPlayer.js', function(req, res)                 // This is the
 app.get('/js/random.mjs', function(req, res)                 // This is the basic syntax for what is called a 'route'
     {
         res.sendFile(path.join(__dirname + '/js/random.mjs'))
+    }); 
+
+app.get('/js/guessingGame.mjs', function(req, res)                 // This is the basic syntax for what is called a 'route'
+    {
+        res.sendFile(path.join(__dirname + '/js/guessingGame.mjs'))
     }); 
 
 

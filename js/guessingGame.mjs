@@ -1,4 +1,4 @@
-const form = document.getElementById('random-form-ajax');
+const form = document.getElementById('guessing-form-ajax');
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault(); // prevent form submission
@@ -30,9 +30,10 @@ form.addEventListener('submit', async (event) => {
       
 
       // Gets the player's stats from 2023
-      async function get2023PlayerStats(playerId) {
+      async function getPlayerStats(playerId) {
           let response = await fetch("https://statsapi.mlb.com/api/v1/people?personIds=" + playerId + "&hydrate=stats(group=[batting],type=[yearByYear])");
           let data = await response.json()
+          console.log(data.people[0])
           return data.people[0];
 }     
       
@@ -61,7 +62,6 @@ form.addEventListener('submit', async (event) => {
           // Finds total numbers of players and generates a random number <= the total number of players
           let playersLength = players2023.length
           let randNumber = Number(await getNumberMicro(playersLength));
-          console.log('random number received from microservice is: ', randNumber)
           let chosenPlayer = players2023[randNumber]
 
           // Records the player's name in a variable
@@ -69,7 +69,7 @@ form.addEventListener('submit', async (event) => {
           let playerId = chosenPlayer.id
 
           // Assigns player's 2023 stats to a variable
-          let playerStats = await get2023PlayerStats(playerId)
+          let playerStats = await getPlayerStats(playerId)
 
           // Establishes a dictionary of teams and their corresponding team numbers in ESPN's API
           let teamsDict = {
@@ -81,7 +81,7 @@ form.addEventListener('submit', async (event) => {
           }
           // Gets player's team name
           let team = playerStats.stats[0].splits.slice(-1)[0].team.name
-
+        
           // Gets player's team's ESPN API number from teamsDict
           let teamNumber = teamsDict[team]
 
@@ -98,54 +98,56 @@ form.addEventListener('submit', async (event) => {
           let name = playerStats.fullName
           let number = playerStats.primaryNumber
 
-          // Adds the player's headshot to the page
-          const headshotsection = document.querySelector(".ajax-section .headshot");
-          
-          // Clears section if there is already an old picture being displayed
-          headshotsection.innerHTML = ''
+        //   // Adds the player's headshot to the page
+        //   const headshotsection = document.querySelector(".ajax-section .headshot");
 
-          // Adds the player's headshot
-          const pic = document.createElement("div");
-          pic.classList.add("headshot");
-          const markuppic = `
+        //   // Adds the player's headshot
+        //   const pic = document.createElement("div");
+        //   pic.classList.add("headshot");
+        //   const markuppic = `
 
-          <div class="container">
-            <div>
-              <img src=${headshot}>
-            </div>
-            <div id="playerinfo">
-              #${number} ${name} <br><br>  ${position} - ${team} 
-            </div>
-          </div>
-          `;
-          pic.innerHTML = markuppic
-          headshotsection.appendChild(pic)
+        //   <div class="container">
+        //     <div>
+        //       <img src=${headshot}>
+        //     </div>
+        //     <div id="playerinfo">
+        //       #${number} ${name} <br><br>  ${position} - ${team} 
+        //     </div>
+        //   </div>
+        //   `;
+        //   pic.innerHTML = markuppic
+        //   headshotsection.appendChild(pic)
 
           // Adds the player's statistics to a table to be displayed
           const statssection = document.querySelector(".ajax-section .stats");
 
-          // Clears section if there is already old stats being displayed
-          statssection.innerHTML = ''
-          
+          console.log('number of seasons is ', playerStats.stats[0].splits, playerStats.stats[0].splits.length)
+
           if (position == 'P') {
-            //console.log(playerStats.stats[0].splits.slice(-1)[0].stat)
+            console.log(playerStats.stats[0].splits.slice(-1)[0].stat)
             // Player stats for pitchers
             // Breaks players information into individual variables
-            let inningsPitched = playerStats.stats[0].splits.slice(-1)[0].stat.inningsPitched
-            let wins =  playerStats.stats[0].splits.slice(-1)[0].stat.wins
-            let losses = playerStats.stats[0].splits.slice(-1)[0].stat.losses
-            let saves = playerStats.stats[0].splits.slice(-1)[0].stat.saves
-            let era = playerStats.stats[0].splits.slice(-1)[0].stat.era
-            let whip = playerStats.stats[0].splits.slice(-1)[0].stat.whip
-            let strikeouts = playerStats.stats[0].splits.slice(-1)[0].stat.strikeOuts
-            let strikeoutsPer9 = playerStats.stats[0].splits.slice(-1)[0].stat.strikeoutsPer9Inn
-            let oppOps = playerStats.stats[0].splits.slice(-1)[0].stat.ops
+            for (let season = 0; season < playerStats.stats[0].splits.length; season++) {
+                console.log('season number ', season)
+            
+            let year = playerStats.stats[0].splits.slice(season)[0].season
+            let games = playerStats.stats[0].splits.slice(season)[0].stat.gamesPlayed
+            let inningsPitched = playerStats.stats[0].splits.slice(season)[0].stat.inningsPitched
+            let wins =  playerStats.stats[0].splits.slice(season)[0].stat.wins
+            let losses = playerStats.stats[0].splits.slice(season)[0].stat.losses
+            let saves = playerStats.stats[0].splits.slice(season)[0].stat.saves
+            let era = playerStats.stats[0].splits.slice(season)[0].stat.era
+            let whip = playerStats.stats[0].splits.slice(season)[0].stat.whip
+            let strikeouts = playerStats.stats[0].splits.slice(season)[0].stat.strikeOuts
+            let strikeoutsPer9 = playerStats.stats[0].splits.slice(season)[0].stat.strikeoutsPer9Inn
+            let oppOps = playerStats.stats[0].splits.slice(season)[0].stat.ops
 
           const table = document.createElement("table");
           table.classList.add("stats");
           const markupstats = `
           <br>
-                <th>Name</th>
+                <th>Year</th>
+                <th>Games</th>
                 <th>Innings Pitched</th>
                 <th>Win - Loss</th>
                 <th>Saves</th>
@@ -155,7 +157,8 @@ form.addEventListener('submit', async (event) => {
                 <th>Strikeouts Per 9</th>
                 <th>Opponent OPS</th>
               <tr> 
-                <td>${name}</td>
+                <td>${year}</td>
+                <td>${games}</td>
                 <td>${inningsPitched}</td>
                 <td>${wins} - ${losses}</td>
                 <td>${saves}</td>
@@ -169,9 +172,11 @@ form.addEventListener('submit', async (event) => {
           `;
           table.innerHTML = markupstats;
           statssection.appendChild(table);
-          } else {
+          }
+        } else {
             // Player stats for non-pitchers
             // Breaks players information into individual variables
+            let year = playerStats.stats[0].splits.slice(-1)[0].season
             let hits =  playerStats.stats[0].splits.slice(-1)[0].stat.hits
             let avg = playerStats.stats[0].splits.slice(-1)[0].stat.avg
             let obp = playerStats.stats[0].splits.slice(-1)[0].stat.obp
@@ -184,7 +189,7 @@ form.addEventListener('submit', async (event) => {
           table.classList.add("stats");
           const markupstats = `
           <br>
-                <th>Name</th>
+                <th>Year</th>
                 <th>Hits</th>
                 <th>Home Runs</th>
                 <th>RBIs</th>
@@ -193,7 +198,7 @@ form.addEventListener('submit', async (event) => {
                 <th>Slugging Percentage</th>
                 <th>On Base + Slugging</th>
               <tr> 
-                <td>${name}</td>
+                <td>${year}</td>
                 <td>${hits}</td>
                 <td>${hrs}</td>
                 <td>${rbis}</td>
