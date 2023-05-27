@@ -5,8 +5,8 @@ form.addEventListener('submit', async (event) => {
 
     console.log('running random.mjs')
 
-    async function get2023Players() {
-      let response = await fetch("https://statsapi.mlb.com/api/v1/sports/1/players?season=2023");
+    async function getPlayers(year) {
+      let response = await fetch("https://statsapi.mlb.com/api/v1/sports/1/players?season=" + year);
       let data = await response.json();
       return data.people;
   };
@@ -56,7 +56,7 @@ form.addEventListener('submit', async (event) => {
         
       async function main() {
           // Gets a list of all the players that have played in the MLB this year
-          let players2023 = await get2023Players();
+          let players2023 = await getPlayers(2022);
 
           // Finds total numbers of players and generates a random number <= the total number of players
           let playersLength = players2023.length

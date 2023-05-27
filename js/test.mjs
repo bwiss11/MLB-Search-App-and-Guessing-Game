@@ -2,8 +2,6 @@
 
 // import e from "express";
 
-console.log('test.mjs called');
-
 const form = document.getElementById('player-search-form-ajax');
 
 form.addEventListener('submit', async (event) => {
@@ -11,14 +9,15 @@ form.addEventListener('submit', async (event) => {
 
   const inputFirstName = document.getElementById('inputfirstname').value;
   const inputLastName = document.getElementById('inputlastname').value;
-  async function get2023Players() {
-    let response = await fetch("https://statsapi.mlb.com/api/v1/sports/1/players?season=2023");
+  const searchYear = document.getElementById('year-dropdown').value;
+  async function getPlayers(year) {
+    let response = await fetch("https://statsapi.mlb.com/api/v1/sports/1/players?season=" + year);
     let data = await response.json();
     return data.people;
 };
 
 // Assigns list of all the players to a variable
-let players2023 = await get2023Players();
+let players = await getPlayers(searchYear);
 //   const response = await fetch(`/api?q=${userInput}`); // make API request
 //   const data = await response.json(); // parse response data
 // Creates two dicts, one for going from player ID to their name and vice versa
@@ -26,8 +25,8 @@ var idToNameDict = new Object();
 var nameToIdDict = new Object();
 
 // First fills out dict from id:name (doing name:id first missed a few entries for some reason)
-for (let i = 0; i < players2023.length; i++) {
-    idToNameDict[players2023[i].id] = players2023[i].fullName
+for (let i = 0; i < players.length; i++) {
+    idToNameDict[players[i].id] = players[i].fullName
 
 };
 
@@ -40,15 +39,15 @@ for (const [key, value] of Object.entries(idToNameDict)) {
 let inputPlayer = inputFirstName + ' ' + inputLastName
 let playerId = nameToIdDict[inputPlayer]
 
-// Gets the player's stats from 2023
-async function get2023PlayerStats() {
+// Gets the player's information
+async function getPlayerInfo() {
     let response = await fetch("https://statsapi.mlb.com/api/v1/people?personIds=" + playerId + "&hydrate=stats(group=[batting],type=[yearByYear])");
     let data = await response.json()
     return data.people[0];
 }
 
-// Assigns player's 2023 stats to a variable
-let playerStats = await get2023PlayerStats()
+// Assigns player's stats to a variable
+let playerStats = await getPlayerInfo()
 
 // Gets player data to be displayed next to headshot
 let name = playerStats.fullName
@@ -123,20 +122,26 @@ const statssection = document.querySelector(".ajax-section .stats");
 
 // Clears section if there is already old stats being displayed
 statssection.innerHTML = ''
-
+// Gets the player's stats from the year that was searched
+for (year in playerStats.stats[0].splits) {
+  if (playerStats.stats[0].splits[year].season == searchYear) {
+    yearStats = playerStats.stats[0].splits[year]
+}
+  }
+  
 if (position == 'P') {
-  console.log(playerStats.stats[0].splits.slice(-1)[0].stat)
+
   // Player stats for pitchers
   // Breaks players information into individual variables
-  let inningsPitched = playerStats.stats[0].splits.slice(-1)[0].stat.inningsPitched
-  let wins =  playerStats.stats[0].splits.slice(-1)[0].stat.wins
-  let losses = playerStats.stats[0].splits.slice(-1)[0].stat.losses
-  let saves = playerStats.stats[0].splits.slice(-1)[0].stat.saves
-  let era = playerStats.stats[0].splits.slice(-1)[0].stat.era
-  let whip = playerStats.stats[0].splits.slice(-1)[0].stat.whip
-  let strikeouts = playerStats.stats[0].splits.slice(-1)[0].stat.strikeOuts
-  let strikeoutsPer9 = playerStats.stats[0].splits.slice(-1)[0].stat.strikeoutsPer9Inn
-  let oppOps = playerStats.stats[0].splits.slice(-1)[0].stat.ops
+  let inningsPitched = yearStats.stat.inningsPitched
+  let wins =  yearStats.stat.wins
+  let losses = yearStats.stat.losses
+  let saves = yearStats.stat.saves
+  let era = yearStats.stat.era
+  let whip = yearStats.stat.whip
+  let strikeouts = yearStats.stat.strikeOuts
+  let strikeoutsPer9 = yearStats.stat.strikeoutsPer9Inn
+  let oppOps = yearStats.stat.ops
 
 const table = document.createElement("table");
 table.classList.add("stats");
@@ -169,13 +174,13 @@ statssection.appendChild(table);
 } else {
   // Player stats for non-pitchers
   // Breaks players information into individual variables
-  let hits =  playerStats.stats[0].splits.slice(-1)[0].stat.hits
-  let avg = playerStats.stats[0].splits.slice(-1)[0].stat.avg
-  let obp = playerStats.stats[0].splits.slice(-1)[0].stat.obp
-  let slg = playerStats.stats[0].splits.slice(-1)[0].stat.slg
-  let rbis = playerStats.stats[0].splits.slice(-1)[0].stat.rbi
-  let hrs = playerStats.stats[0].splits.slice(-1)[0].stat.homeRuns
-  let ops = playerStats.stats[0].splits.slice(-1)[0].stat.ops
+  let hits =  yearStats.stat.hits
+  let avg = yearStats.stat.avg
+  let obp = yearStats.stat.obp
+  let slg = yearStats.stat.slg
+  let rbis = yearStats.stat.rbi
+  let hrs = yearStats.stat.homeRuns
+  let ops = yearStats.stat.ops
 // Fills out table with player's stats
 const table = document.createElement("table");
 table.classList.add("stats");
