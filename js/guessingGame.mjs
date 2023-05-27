@@ -120,6 +120,7 @@ form.addEventListener('submit', async (event) => {
 
           // Adds the player's statistics to a table to be displayed
           const statssection = document.querySelector(".ajax-section .stats");
+          statssection.innerHTML = ''
 
           console.log('number of seasons is ', playerStats.stats[0].splits, playerStats.stats[0].splits.length)
 
@@ -174,45 +175,48 @@ form.addEventListener('submit', async (event) => {
           statssection.appendChild(table);
           }
         } else {
-            // Player stats for non-pitchers
-            // Breaks players information into individual variables
-            let year = playerStats.stats[0].splits.slice(-1)[0].season
-            let hits =  playerStats.stats[0].splits.slice(-1)[0].stat.hits
-            let avg = playerStats.stats[0].splits.slice(-1)[0].stat.avg
-            let obp = playerStats.stats[0].splits.slice(-1)[0].stat.obp
-            let slg = playerStats.stats[0].splits.slice(-1)[0].stat.slg
-            let rbis = playerStats.stats[0].splits.slice(-1)[0].stat.rbi
-            let hrs = playerStats.stats[0].splits.slice(-1)[0].stat.homeRuns
-            let ops = playerStats.stats[0].splits.slice(-1)[0].stat.ops
-          // Fills out table with player's stats
-          const table = document.createElement("table");
-          table.classList.add("stats");
-          const markupstats = `
-          <br>
-                <th>Year</th>
-                <th>Hits</th>
-                <th>Home Runs</th>
-                <th>RBIs</th>
-                <th>Batting Average</th>
-                <th>On Base Percentage</th>
-                <th>Slugging Percentage</th>
-                <th>On Base + Slugging</th>
-              <tr> 
-                <td>${year}</td>
-                <td>${hits}</td>
-                <td>${hrs}</td>
-                <td>${rbis}</td>
-                <td>${avg}</td>
-                <td>${obp}</td>
-                <td>${slg}</td>
-                <td>${ops}</td>
-              </tr>
-          <br>
-          `;
-          table.innerHTML = markupstats;
-          statssection.appendChild(table);
-          }
+          // Player stats for non-pitchers
+          for (let season = 0; season < playerStats.stats[0].splits.length; season++) {
+            console.log('season number ', season)
+        
+            let year = playerStats.stats[0].splits.slice(season)[0].season
+            let hits =  playerStats.stats[0].splits.slice(season)[0].stat.hits
+            let avg = playerStats.stats[0].splits.slice(season)[0].stat.avg
+            let obp = playerStats.stats[0].splits.slice(season)[0].stat.obp
+            let slg = playerStats.stats[0].splits.slice(season)[0].stat.slg
+            let rbis = playerStats.stats[0].splits.slice(season)[0].stat.rbi
+            let hrs = playerStats.stats[0].splits.slice(season)[0].stat.homeRuns
+            let ops = playerStats.stats[0].splits.slice(season)[0].stat.ops
 
-        }
+       // Fills out table with player's stats
+       const table = document.createElement("table");
+       table.classList.add("stats");
+       const markupstats = `
+       <br>
+             <th>Year</th>
+             <th>Hits</th>
+             <th>Home Runs</th>
+             <th>RBIs</th>
+             <th>Batting Average</th>
+             <th>On Base Percentage</th>
+             <th>Slugging Percentage</th>
+             <th>On Base + Slugging</th>
+           <tr> 
+             <td>${year}</td>
+             <td>${hits}</td>
+             <td>${hrs}</td>
+             <td>${rbis}</td>
+             <td>${avg}</td>
+             <td>${obp}</td>
+             <td>${slg}</td>
+             <td>${ops}</td>
+           </tr>
+       <br>
+       `;
+       table.innerHTML = markupstats;
+       statssection.appendChild(table);
+      }
+    }
+  }
       main()
 });
