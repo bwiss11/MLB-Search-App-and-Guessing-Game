@@ -123,7 +123,8 @@ form.addEventListener('submit', async (event) => {
           statssection.innerHTML = ''
 
           console.log('number of seasons is ', playerStats.stats[0].splits, playerStats.stats[0].splits.length)
-
+          const table = document.createElement("table");
+          table.classList.add("stats");
           if (position == 'P') {
             console.log(playerStats.stats[0].splits.slice(-1)[0].stat)
             // Player stats for pitchers
@@ -143,10 +144,10 @@ form.addEventListener('submit', async (event) => {
             let strikeoutsPer9 = playerStats.stats[0].splits.slice(season)[0].stat.strikeoutsPer9Inn
             let oppOps = playerStats.stats[0].splits.slice(season)[0].stat.ops
 
-          const table = document.createElement("table");
-          table.classList.add("stats");
-          const markupstats = `
-          <br>
+          console.log('season number is' + season)
+          if (season == 0) {
+            // Puts in header rows while adding in first season's statistics
+          let markupstats = `
                 <th>Year</th>
                 <th>Games</th>
                 <th>Innings Pitched</th>
@@ -169,15 +170,33 @@ form.addEventListener('submit', async (event) => {
                 <td>${strikeoutsPer9}</td>
                 <td>${oppOps}</td>
               </tr>
-          <br>
           `;
           table.innerHTML = markupstats;
-          statssection.appendChild(table);
+          statssection.appendChild(table);}
+          else {
+            // Only adds statistics (with no header rows) if it is past the first season
+            const row = document.createElement("tr")
+            let markupstats = `
+            <tr>
+                <td>${year}</td>
+                <td>${games}</td>
+                <td>${inningsPitched}</td>
+                <td>${wins} - ${losses}</td>
+                <td>${saves}</td>
+                <td>${era}</td>
+                <td>${whip}</td>
+                <td>${strikeouts}</td>
+                <td>${strikeoutsPer9}</td>
+                <td>${oppOps}</td>
+              </tr>
+          `;
+          row.innerHTML = markupstats;
+          table.appendChild(row);
+            }
           }
         } else {
           // Player stats for non-pitchers
           for (let season = 0; season < playerStats.stats[0].splits.length; season++) {
-            console.log('season number ', season)
         
             let year = playerStats.stats[0].splits.slice(season)[0].season
             let hits =  playerStats.stats[0].splits.slice(season)[0].stat.hits
@@ -188,11 +207,9 @@ form.addEventListener('submit', async (event) => {
             let hrs = playerStats.stats[0].splits.slice(season)[0].stat.homeRuns
             let ops = playerStats.stats[0].splits.slice(season)[0].stat.ops
 
-       // Fills out table with player's stats
-       const table = document.createElement("table");
-       table.classList.add("stats");
-       const markupstats = `
-       <br>
+       // Fills out table with player's stats puts in header rows while adding in first season's statistics
+       if (season == 0) {
+       let markupstats = `
              <th>Year</th>
              <th>Hits</th>
              <th>Home Runs</th>
@@ -211,10 +228,27 @@ form.addEventListener('submit', async (event) => {
              <td>${slg}</td>
              <td>${ops}</td>
            </tr>
-       <br>
        `;
        table.innerHTML = markupstats;
        statssection.appendChild(table);
+       }
+       else {
+        // Only adds statistics (with no header rows) if it is past the first season
+        const row = document.createElement("tr")
+        let markupstats = `
+          <tr> 
+            <td>${year}</td>
+            <td>${hits}</td>
+            <td>${hrs}</td>
+            <td>${rbis}</td>
+            <td>${avg}</td>
+            <td>${obp}</td>
+            <td>${slg}</td>
+            <td>${ops}</td>
+          </tr>`
+      row.innerHTML = markupstats;
+      table.appendChild(row);
+       }
       }
     }
   }
