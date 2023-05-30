@@ -1,24 +1,34 @@
+// Reveals the player's name by turning the text color to white
+function reveal() {
+  document.getElementById("revealed-player").style.color = 'white'
+}
+
+// Gives a hint about the player by revealing their current team
+function hint() {
+  document.getElementById("hint-box").style.color = 'white'
+}
+
+
 const form = document.getElementById('guessing-form-ajax');
 
+// Handles the submission of the form
 form.addEventListener('submit', async (event) => {
     event.preventDefault(); // prevent form submission
 
-    console.log('running random.mjs')
-
+    // Returns every player that has played in 2023
     async function get2023Players() {
       let response = await fetch("https://statsapi.mlb.com/api/v1/sports/1/players?season=2023");
       let data = await response.json();
       return data.people;
-  };
+      };
   
-
+    // Makes request to microservice to get random number within range of the number of players who have played in 2023
     async function getNumberMicro(upperLimit) {
         let response = await fetch("http://localhost:8000/randomnumber", 
         {
           method: 'POST',
           mode: 'cors',
           headers: {
-              // "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
               "Content-type": "application/json"
           },
           body: JSON.stringify({ range: upperLimit })
@@ -28,21 +38,20 @@ form.addEventListener('submit', async (event) => {
         return num
       };
       
-
-      // Gets the player's stats from 2023
+      // Gets a specific player's information using their ID
       async function getPlayerStats(playerId) {
           let response = await fetch("https://statsapi.mlb.com/api/v1/people?personIds=" + playerId + "&hydrate=stats(group=[batting],type=[yearByYear])");
           let data = await response.json()
           console.log(data.people[0])
           return data.people[0];
-}     
-      
+        };
+
       // Retrieves the roster of the player's team from ESPN's API
       async function getTeam(teamNumber) {
           let response = await fetch("https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/" + teamNumber + "?enable=roster");
           let data = await response.json()
           return data
-};
+        };
 
           // Goes through list of team's players and finds the headshot for the player whose name matches the input
       async function getHeadshot(teamRoster, inputPlayer) {
@@ -54,7 +63,8 @@ form.addEventListener('submit', async (event) => {
           }
           return playerPic
         };
-        
+      
+      // Function that calls a bunch of the other functions previously defined
       async function main() {
           // Gets a list of all the players that have played in the MLB this year
           let players2023 = await get2023Players();
@@ -98,31 +108,11 @@ form.addEventListener('submit', async (event) => {
           let name = playerStats.fullName
           let number = playerStats.primaryNumber
 
-        //   // Adds the player's headshot to the page
-        //   const headshotsection = document.querySelector(".ajax-section .headshot");
-
-        //   // Adds the player's headshot
-        //   const pic = document.createElement("div");
-        //   pic.classList.add("headshot");
-        //   const markuppic = `
-
-        //   <div class="container">
-        //     <div>
-        //       <img src=${headshot}>
-        //     </div>
-        //     <div id="playerinfo">
-        //       #${number} ${name} <br><br>  ${position} - ${team} 
-        //     </div>
-        //   </div>
-        //   `;
-        //   pic.innerHTML = markuppic
-        //   headshotsection.appendChild(pic)
-
           // Adds the player's statistics to a table to be displayed
           const statssection = document.querySelector(".ajax-section .stats");
           statssection.innerHTML = ''
 
-          console.log('number of seasons is ', playerStats.stats[0].splits, playerStats.stats[0].splits.length)
+          // Adds the player's stats to a table
           const table = document.createElement("table");
           table.classList.add("stats");
           if (position == 'P') {
@@ -130,7 +120,6 @@ form.addEventListener('submit', async (event) => {
             // Player stats for pitchers
             // Breaks players information into individual variables
             for (let season = 0; season < playerStats.stats[0].splits.length; season++) {
-                console.log('season number ', season)
             
             let year = playerStats.stats[0].splits.slice(season)[0].season
             let games = playerStats.stats[0].splits.slice(season)[0].stat.gamesPlayed
@@ -144,7 +133,6 @@ form.addEventListener('submit', async (event) => {
             let strikeoutsPer9 = playerStats.stats[0].splits.slice(season)[0].stat.strikeoutsPer9Inn
             let oppOps = playerStats.stats[0].splits.slice(season)[0].stat.ops
 
-          console.log('season number is' + season)
           if (season == 0) {
             // Puts in header rows while adding in first season's statistics
           let markupstats = `
@@ -251,6 +239,11 @@ form.addEventListener('submit', async (event) => {
        }
       }
     }
+    document.getElementById("revealed-player").style.color = 'black'
+    document.getElementById("revealed-player").innerHTML = name
+    document.getElementById("hint-box").style.color = 'black'
+    document.getElementById("hint-box").innerHTML = '2023 team: ' + team
   }
       main()
+
 });

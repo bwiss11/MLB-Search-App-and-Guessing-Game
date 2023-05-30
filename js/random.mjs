@@ -3,8 +3,6 @@ const form = document.getElementById('random-form-ajax');
 form.addEventListener('submit', async (event) => {
     event.preventDefault(); // prevent form submission
 
-    console.log('running random.mjs')
-
     async function getPlayers(year) {
       let response = await fetch("https://statsapi.mlb.com/api/v1/sports/1/players?season=" + year);
       let data = await response.json();
@@ -45,6 +43,7 @@ form.addEventListener('submit', async (event) => {
 
           // Goes through list of team's players and finds the headshot for the player whose name matches the input
       async function getHeadshot(teamRoster, inputPlayer) {
+        console.log(inputPlayer, teamRoster.team.athletes.length)
           for (let i = 0; i < teamRoster.team.athletes.length; i++) {
               if (teamRoster.team.athletes[i].fullName == inputPlayer) {
                   playerPic = teamRoster.team.athletes[i].headshot.href
@@ -76,8 +75,9 @@ form.addEventListener('submit', async (event) => {
             'Arizona Diamondbacks': '29', 'Atlanta Braves': '15', 'Baltimore Orioles': '1', 'Boston Red Sox': '2', 'Chicago Cubs': '16',
             'Chicago White Sox': '4', 'Cincinnati Reds': '17', 'Cleveland Guardians': '5', 'Colorado Rockies': '27', 'Detroit Tigers': '6', 'Houston Astros': '18',
             'Kansas City Royals': '7', 'Los Angeles Angels': '3', 'Los Angeles Dodgers': '19', 'Miami Marlins': '28', 'Milwaukee Brewers': '8', 'Minnesota Twins': '9', 
-            'New York Mets': '21', 'New York Yankees': '10', 'Oakland Athletics': '11', 'Philadelphia Phillies': '22', 'Pittsburgh Pirates': '23', 'San Diego Padres': '25', 'San Francisco Giants': '26',
-            'Seattle Mariners': '12', 'St. Louis Cardinals': '24', 'Tampa Bay Rays': '30', 'Texas Rangers': '13', 'Toronto Blue Jays': '14', 'Washington Nationals': '20'
+            'New York Mets': '21', 'New York Yankees': '10', 'Oakland Athletics': '11', 'Philadelphia Phillies': '22', 'Pittsburgh Pirates': '23', 'San Diego Padres': '25', 
+            'San Francisco Giants': '26', 'Seattle Mariners': '12', 'St. Louis Cardinals': '24', 'Tampa Bay Rays': '30', 'Texas Rangers': '13', 'Toronto Blue Jays': '14', 
+            'Washington Nationals': '20'
           }
           // Gets player's team name
           let team = playerStats.stats[0].splits.slice(-1)[0].team.name

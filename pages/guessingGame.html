@@ -7,21 +7,35 @@
     <li style="border-left:1px solid #bbb"><a href="./playerSearch" style="font-weight:bold; color:white">Player Search</a></li>
     <li><a href="./random" style="font-weight:bold; color:white">Random</a></li>
     <li><a href="./guessingGame" style="font-weight:bold; color:white">Guessing Game</a></li>
-    <li style="float:right; border-left:1px solid #bbb;"><a href="./exampleResults" style="font-weight:bold; color:white">Results</a></li>
-    <li style="float:right; border-left:1px solid #bbb;"><a href="./backExample" style="font-weight:bold; color:white">Back Example</a></li>
-    <li style="float:right; border-left:1px solid #bbb;"><a href="./errorPageExample" style="font-weight:bold; color:white">Error</a></li>
-    <li style="float:right; border-left:1px solid #bbb;"><a href="./about" style="font-weight:bold; color:white">About</a></li>
 </ul> 
 <br>
 <br>
 <br>
 
 <form id="guessing-form-ajax">
+    <p>Click the button below to generate a random player and try to guess who it is based on their statistics!</p>
+    <p>Generating a new player to guess will delete the old player's information.</p>
     <div style="text-align:center">
     <input class="button" type="submit" id="random" value="Initiate Player">
     </div>
 </form>
-    
+<br>
+<br>
+<br>
+<p>Click the button below to receive a hint about the player.</p>
+<button onclick="hint()" id="hint">Hint</button>
+<br>
+<br>
+<div id="hint-box" style="color: black">
+</div>
+<br>
+<p>Click the button below to reveal the player.</p>
+<button onclick="reveal()" id="reveal">Reveal Player</button>
+<br>
+<br>
+<div id="revealed-player" style="color: black">
+</div>
+<br>
 <section class="ajax-section">
     <div class="headshot">
         </div>
@@ -30,4 +44,4 @@
 </section>
     
     
-    <script src="../js/guessingGame.mjs"></script>
+<script src="../js/guessingGame.mjs"></script>

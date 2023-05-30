@@ -1,12 +1,10 @@
-// import fetch from 'node-fetch'
-
-// import e from "express";
-
 const form = document.getElementById('player-search-form-ajax');
+
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault(); // prevent form submission
 
+  // Gets the player's information and year, returns all players from that year
   const inputFirstName = document.getElementById('inputfirstname').value;
   const inputLastName = document.getElementById('inputlastname').value;
   const searchYear = document.getElementById('year-dropdown').value;
@@ -18,16 +16,14 @@ form.addEventListener('submit', async (event) => {
 
 // Assigns list of all the players to a variable
 let players = await getPlayers(searchYear);
-//   const response = await fetch(`/api?q=${userInput}`); // make API request
-//   const data = await response.json(); // parse response data
-// Creates two dicts, one for going from player ID to their name and vice versa
+
+// Creates two dictionaries, one for going from player ID to their name and vice versa
 var idToNameDict = new Object();
 var nameToIdDict = new Object();
 
 // First fills out dict from id:name (doing name:id first missed a few entries for some reason)
 for (let i = 0; i < players.length; i++) {
     idToNameDict[players[i].id] = players[i].fullName
-
 };
 
 // Fills out dictionary for going from name to player ID
@@ -35,18 +31,14 @@ for (const [key, value] of Object.entries(idToNameDict)) {
     nameToIdDict[value] = key;
   }
 
-// Current spot to hardcode in the player you want
+// Gets the player's information
 let inputPlayer = inputFirstName + ' ' + inputLastName
 let playerId = nameToIdDict[inputPlayer]
-
-// Gets the player's information
 async function getPlayerInfo() {
     let response = await fetch("https://statsapi.mlb.com/api/v1/people?personIds=" + playerId + "&hydrate=stats(group=[batting],type=[yearByYear])");
     let data = await response.json()
     return data.people[0];
 }
-
-// Assigns player's stats to a variable
 let playerStats = await getPlayerInfo()
 
 // Gets player data to be displayed next to headshot
@@ -73,13 +65,11 @@ async function getTeam() {
   return data
 };
 
-// Assigns the player's team's roster to a variable
+// Assigns the player's team's roster to a variable and establishes variable to hold link to player's headshot
 let teamRoster = await getTeam()
-
-// Establishes variable to hold link to player's headshot
 var playerPic = ''
 
-// Goes through list of team's players and finds the headshot for the player whose name matches the input
+// Goes through list of team's players and finds the headshot for the player whose name matches the input, assigns the headshot to be dynamically displayed on the Results page
 async function getHeadshot() {
     for (let i = 0; i < teamRoster.team.athletes.length; i++) {
         if (teamRoster.team.athletes[i].fullName == inputPlayer) {
@@ -90,10 +80,7 @@ async function getHeadshot() {
     return playerPic
 };
 
-// Calls function that returns link to player's headshot, assigns the headshot to be dynamically displayed on the Results page
 let headshot = await getHeadshot()
-
-// Adds the player's headshot to the page
 const headshotsection = document.querySelector(".ajax-section .headshot");
 
 // Clears section if there is already an old picture being displayed
@@ -103,7 +90,6 @@ headshotsection.innerHTML = ''
 const pic = document.createElement("div");
 pic.classList.add("headshot");
 const markuppic = `
-
 <div class="container">
   <div>
     <img src=${headshot}>
