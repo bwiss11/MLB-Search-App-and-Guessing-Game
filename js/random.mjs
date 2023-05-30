@@ -128,7 +128,6 @@ form.addEventListener('submit', async (event) => {
           statssection.innerHTML = ''
           
           if (position == 'P') {
-            //console.log(playerStats.stats[0].splits.slice(-1)[0].stat)
             // Player stats for pitchers
             // Breaks players information into individual variables
             let inningsPitched = playerStats.stats[0].splits.slice(-1)[0].stat.inningsPitched
