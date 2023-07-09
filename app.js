@@ -1,5 +1,3 @@
-// App.js
-
 /*
     SETUP
 */
@@ -66,6 +64,6 @@ app.get('/js/guessingGame.mjs', function(req, res)
 /*
     LISTENER
 */
-app.listen(PORT, function(){            // This is the basic syntax for what is called the 'listener' which receives incoming requests on the specified PORT.
+app.listen(PORT, function(){           
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate.')
 });
